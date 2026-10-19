@@ -6,6 +6,8 @@
  * - /mnt/d/LaTeX/resume/PROFILE.md (master profile)
  * - the gnani-ai-engineer and pwc-combined tailored resume packets
  * - each project repo's README on its default branch
+ * - the NCC 2027 paper draft (/mnt/d/conference_paper v6/ncc2027-example.tex),
+ *   which owns the GPU Method of Moments solver figures and caveats
  */
 
 export interface Link {
