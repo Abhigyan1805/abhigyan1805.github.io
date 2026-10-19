@@ -36,19 +36,24 @@ in the contact section.
 
 ## Deploying to GitHub Pages
 
+The site is live at https://abhigyan1805.github.io (a user site, served from the root).
+
+Every push to `main` runs `.github/workflows/deploy.yml`, which builds the site with
+Node 22 and publishes `dist/` using the official GitHub Pages actions. It can also be
+run by hand from the Actions tab (`workflow_dispatch`). The workflow sets
+`SITE_URL=https://abhigyan1805.github.io` and `BASE_PATH=/`.
+
 The base path and site URL come from environment variables at build time:
 
 ```sh
+# user page (what the workflow uses)
+SITE_URL=https://abhigyan1805.github.io BASE_PATH=/ npm run build
+
 # project page: https://abhigyan1805.github.io/portfolio-site/
 SITE_URL=https://abhigyan1805.github.io BASE_PATH=/portfolio-site/ npm run build
-
-# user page or custom domain: served from the root
-SITE_URL=https://example.com npm run build
 ```
 
-All internal links go through `src/lib/url.ts`, so they follow `BASE_PATH`. Upload
-`dist/` (for example with the `actions/upload-pages-artifact` and
-`actions/deploy-pages` actions).
+All internal links go through `src/lib/url.ts`, so they follow `BASE_PATH`.
 
 ## Regenerating assets
 
