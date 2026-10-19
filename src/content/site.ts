@@ -153,6 +153,7 @@ export const projects: Project[] = [
       caveats: [
         'The 130× figure is a projection (1,000 times the mean measured single-sweep time of 4 designs), not a measured end-to-end run, and the spread across designs is wide (24× to 253×).',
         'The CST comparison is indicative only: CST models finite copper thickness on an adaptive mesh, while the solver uses a zero-thickness sheet on a uniform grid.',
+        'The CPU comparison is not hardware alone: the CPU baseline runs in double precision to a 10⁻⁸ tolerance, while the GPU solver runs in single precision (complex64) to a 5×10⁻⁴ tolerance, so the 33× to 50× ratio also includes the looser GPU tolerance.',
         'This is ongoing internship work at CSIR-NAL, so the code is not public.',
       ],
     },
