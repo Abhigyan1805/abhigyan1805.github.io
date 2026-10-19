@@ -131,7 +131,7 @@ export const projects: Project[] = [
       unit: 'minutes',
       lowerIsBetter: true,
       items: [
-        { label: 'CST', value: 2220, display: '~37 h' },
+        { label: 'CST', value: 2196, display: '~36.6 h' },
         { label: 'This solver, 4×A100', value: 17, display: '~17 min', highlight: true },
       ],
     },
@@ -145,15 +145,15 @@ export const projects: Project[] = [
         'The solver output feeds a response-prediction pipeline, which I improved with vision transformers. I also explored diffusion and GAN generative models for the same computational engineering problems.',
       ],
       results: [
-        'Validated against CST on 4 designs.',
+        'Validated against CST on 4 designs: the principal resonances agree within 4.8% in frequency and 6.2 dB in depth.',
         'Measured on 4 designs, one 201-point sweep each (2 to 18 GHz): the solver on 4×A100 was 24× to 253× faster than CST, and 33× to 50× faster than the same FFT-based method on one CPU.',
-        'Scaled to 1,000 sweeps using the mean times of those 4 designs, that projects to roughly 37 hours in CST against roughly 17 minutes on 4×A100, about 130× faster.',
+        'Scaled to 1,000 sweeps using the mean times of those 4 designs, that projects to about 36.6 hours in CST and 11.8 hours on one CPU, against about 17 minutes on 4×A100, about 130× faster than CST.',
         'A first-author paper is in preparation for NCC 2027.',
       ],
       caveats: [
         'The 130× figure is a projection (1,000 times the mean measured single-sweep time of 4 designs), not a measured end-to-end run, and the spread across designs is wide (24× to 253×).',
-        'The CST comparison is indicative only: CST models finite copper thickness on an adaptive mesh, while the solver uses a zero-thickness sheet on a uniform grid.',
-        'The CPU comparison is not hardware alone: the CPU baseline runs in double precision to a 10⁻⁸ tolerance, while the GPU solver runs in single precision (complex64) to a 5×10⁻⁴ tolerance, so the 33× to 50× ratio also includes the looser GPU tolerance.',
+        'The CST reference is a FEM unit-cell model with Floquet ports, while the solver models the pattern as a zero-thickness sheet.',
+        'The 33× to 50× CPU comparison is not at the same precision: the GPU solver runs in single precision (complex64) with a tolerance of 5×10⁻⁴, since tighter values stall in single precision, while the CPU baseline runs the same solver in double precision (complex128) with a tolerance of 10⁻⁸.',
         'This is ongoing internship work at CSIR-NAL, so the code is not public.',
       ],
     },
