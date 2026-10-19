@@ -121,13 +121,13 @@ export const projects: Project[] = [
     summary:
       'An electromagnetics solver written in PyTorch that computes how metasurface designs respond, fast enough to generate training data for ML models.',
     finding:
-      'Validated against CST on 4 designs and projected at about 130× faster than CST for a 1,000-design dataset.',
+      'Validated against CST on 4 designs. Projected at about 130× faster than CST for 1,000 sweeps, extrapolated from measured single sweeps.',
     stack: ['PyTorch', 'FFT', 'GMRES', 'Computational electromagnetics'],
     links: [],
     status: 'CSIR-NAL, first-author paper in preparation for NCC 2027',
     figure: {
       kind: 'bars',
-      caption: 'Projected time to simulate a 1,000-design dataset',
+      caption: 'Projected time for 1,000 sweeps, extrapolated from 4 measured designs',
       unit: 'minutes',
       lowerIsBetter: true,
       items: [
@@ -146,11 +146,13 @@ export const projects: Project[] = [
       ],
       results: [
         'Validated against CST on 4 designs.',
-        'Projected at about 130× faster than CST for a 1,000-design dataset: roughly 37 hours in CST against roughly 17 minutes on 4×A100.',
+        'Measured on 4 designs, one 201-point sweep each (2 to 18 GHz): the solver on 4×A100 was 24× to 253× faster than CST, and 33× to 50× faster than the same FFT-based method on one CPU.',
+        'Scaled to 1,000 sweeps using the mean times of those 4 designs, that projects to roughly 37 hours in CST against roughly 17 minutes on 4×A100, about 130× faster.',
         'A first-author paper is in preparation for NCC 2027.',
       ],
       caveats: [
-        'The speed-up is a projection for a 1,000-design dataset, not a measured end-to-end run.',
+        'The 130× figure is a projection (1,000 times the mean measured single-sweep time of 4 designs), not a measured end-to-end run, and the spread across designs is wide (24× to 253×).',
+        'The CST comparison is indicative only: CST models finite copper thickness on an adaptive mesh, while the solver uses a zero-thickness sheet on a uniform grid.',
         'This is ongoing internship work at CSIR-NAL, so the code is not public.',
       ],
     },
@@ -372,7 +374,7 @@ export const experience: Role[] = [
     start: 'Jul 2026',
     end: 'present',
     points: [
-      'Built a GPU-accelerated Method of Moments solver in PyTorch (FFT-based matrix-free operator, batched GMRES), validated against CST on 4 designs and projected at about 130× faster than CST for a 1,000-design dataset.',
+      'Built a GPU-accelerated Method of Moments solver in PyTorch (FFT-based matrix-free operator, batched GMRES), validated against CST on 4 designs, with 1,000 sweeps projected at about 130× faster than CST (extrapolated from measured single sweeps).',
       'Improved the response-prediction pipeline with vision transformers, and explored diffusion and GAN generative models for computational engineering.',
       'First-author paper in preparation for NCC 2027.',
     ],
@@ -408,7 +410,7 @@ export const research = [
     venue: 'First-author paper in preparation for NCC 2027',
     note: 'CSIR-National Aerospace Laboratories, CEM Division',
     summary:
-      'A Method of Moments solver in PyTorch with an FFT-based matrix-free operator and batched GMRES, validated against CST on 4 designs and projected at about 130× faster than CST for a 1,000-design dataset.',
+      'A Method of Moments solver in PyTorch with an FFT-based matrix-free operator and batched GMRES, validated against CST on 4 designs, with 1,000 sweeps projected at about 130× faster than CST (extrapolated from measured single sweeps).',
     href: 'work/gpu-method-of-moments/',
   },
 ];
