@@ -1,0 +1,280 @@
+/* Fonts: self-hosted subsets, see README. */
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('../assets/fonts/mona-sans-var.woff2') format('woff2');
+  font-weight: 200 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  src: url('../assets/fonts/stix-italic-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00D7, U+2212, U+2032;
+}
+@font-face {
+  font-family: 'STIX Two Text';
+  src: url('../assets/fonts/stix-italic-greek.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0370-03FF;
+}
+/* Metric-adjusted fallback so the swap does not move text. */
+@font-face {
+  font-family: 'Mona Fallback';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 101%;
+  ascent-override: 91%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #f2f4f6;
+  --paper-raised: #e8ecf0;
+  --ink: #10233b;
+  --muted: #4a5b70;
+  --line: #c9d2dc;
+  --prussian: #1d4e89;
+  --sodium-text: #8a5f00;
+  --sodium-fill: #f2b630;
+  --focus: #8a5f00;
+  --bar: #9fb3cc;
+
+  --sans: 'Mona Sans', 'Mona Fallback', system-ui, sans-serif;
+  --math: 'STIX Two Text', 'Cambria Math', 'Times New Roman', serif;
+
+  /* Major-third scale from the body size. */
+  --step--1: 0.875rem;
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --step-1: 1.3125rem;
+  --step-2: clamp(1.45rem, 1.3rem + 0.6vw, 1.6875rem);
+  --step-3: clamp(1.75rem, 1.5rem + 1vw, 2.0625rem);
+  --step-4: clamp(2.1rem, 1.7rem + 1.8vw, 2.625rem);
+  /* "Kumar Singh" in wide Mona Sans is about 6.1em, so size from the line length. */
+  --display: min(7.4rem, (100vw - 2 * var(--gutter)) / 6.5);
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --max: 1240px;
+  --header-h: 3.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #0a1729;
+    --paper-raised: #102038;
+    --ink: #dce4ee;
+    --muted: #9baac0;
+    --line: #22344d;
+    --prussian: #7fb0ea;
+    --sodium-text: #f5c04a;
+    --sodium-fill: #f5c04a;
+    --focus: #f5c04a;
+    --bar: #3a5679;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #0a1729;
+  --paper-raised: #102038;
+  --ink: #dce4ee;
+  --muted: #9baac0;
+  --line: #22344d;
+  --prussian: #7fb0ea;
+  --sodium-text: #f5c04a;
+  --sodium-fill: #f5c04a;
+  --focus: #f5c04a;
+  --bar: #3a5679;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+@media (max-width: 759px) {
+  html {
+    scroll-padding-top: 7rem;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 640;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p,
+ul,
+ol,
+dl,
+figure {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--prussian);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.math {
+  font-family: var(--math);
+  font-style: italic;
+  font-variant-numeric: normal;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100px;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Section frame: heading in the margin column, content to the right. */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem);
+  border-top: 1px solid var(--line);
+}
+.section > .section-head h2 {
+  font-size: var(--step-2);
+  font-stretch: 112%;
+  font-weight: 620;
+}
+.section > .section-head p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: var(--step--1);
+  max-width: 28ch;
+}
+.section > .section-body {
+  min-width: 0;
+}
+@media (min-width: 860px) {
+  .section {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    gap: 2.5rem;
+  }
+  .section > .section-head {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    align-self: start;
+  }
+}
+
+.prose {
+  max-width: 66ch;
+}
+.prose > * + * {
+  margin-top: 1em;
+}
+
+.stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: var(--step--1);
+}
+.stack-list li:not(:last-child)::after {
+  content: ',';
+  margin-right: 0.4em;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0;
+  list-style: none;
+  font-weight: 560;
+}
+.link-row a {
+  display: inline-block;
+  padding-block: 0.35rem;
+}

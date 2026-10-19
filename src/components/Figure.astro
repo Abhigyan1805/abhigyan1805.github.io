@@ -1,0 +1,202 @@
+---
+import type { Figure } from '../content/site';
+
+interface Props {
+  figure: Figure;
+  size?: 'compact' | 'large';
+}
+
+const { figure, size = 'compact' } = Astro.props;
+
+const pct = (v: number, [lo, hi]: [number, number]) =>
+  `${Math.max(0, Math.min(100, ((v - lo) / (hi - lo)) * 100)).toFixed(2)}%`;
+
+const fmt = (v: number) => (Number.isInteger(v) ? String(v) : String(v));
+
+let axis: [number, number] = [0, 1];
+if (figure.kind === 'bars') {
+  axis = [0, figure.max ?? Math.max(...figure.items.map((i) => i.value))];
+} else {
+  axis = figure.axis;
+}
+const reference = figure.kind === 'bars' ? undefined : figure.reference;
+const direction =
+  figure.kind !== 'intervals' && figure.lowerIsBetter ? 'Lower is better.' : '';
+---
+
+<figure class:list={['chart', size, figure.kind]}>
+  <figcaption>
+    {figure.caption}
+    {direction && <span class="direction"> {direction}</span>}
+  </figcaption>
+  <ul class="rows">
+    {
+      figure.items.map((item) => (
+        <li class:list={['row', { highlight: item.highlight }]}>
+          <span class="label">{item.label}</span>
+          <span class="track" aria-hidden="true">
+            {reference && <span class="ref" style={`left:${pct(reference.value, axis)}`} />}
+            {figure.kind === 'bars' && <span class="bar" style={`width:${pct(item.value, axis)}`} />}
+            {figure.kind === 'intervals' && 'lo' in item && (
+              <>
+                <span
+                  class="ci"
+                  style={`left:${pct(item.lo, axis)};width:calc(${pct(item.hi, axis)} - ${pct(item.lo, axis)})`}
+                />
+                <span class="dot" style={`left:${pct(item.value, axis)}`} />
+              </>
+            )}
+            {figure.kind === 'dots' && <span class="dot" style={`left:${pct(item.value, axis)}`} />}
+          </span>
+          <span class="value">
+            {'display' in item && item.display ? item.display : fmt(item.value)}
+            {'lo' in item && (
+              <span class="interval">
+                {' '}
+                [{fmt(item.lo)}, {fmt(item.hi)}]
+              </span>
+            )}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    reference && (
+      <p class="legend">
+        <span class="ref-key" aria-hidden="true" />
+        {reference.label} at {fmt(reference.value)}
+      </p>
+    )
+  }
+</figure>
+
+<style>
+  .chart {
+    --track-h: 0.7rem;
+    display: grid;
+    gap: 0.9rem;
+    font-size: var(--step--1);
+  }
+  figcaption {
+    color: var(--muted);
+    line-height: 1.4;
+    max-width: 46ch;
+  }
+  .rows {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'label value'
+      'track track';
+    gap: 0.3rem 1rem;
+    align-items: baseline;
+  }
+  .label {
+    grid-area: label;
+    min-width: 0;
+  }
+  .value {
+    grid-area: value;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .interval {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .highlight .label {
+    font-weight: 620;
+  }
+  .track {
+    grid-area: track;
+    position: relative;
+    height: var(--track-h);
+    border-radius: 1px;
+  }
+  .bars .track {
+    background: color-mix(in srgb, var(--line) 45%, transparent);
+  }
+  .intervals .track,
+  .dots .track {
+    background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat;
+  }
+  .bar {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    min-width: 3px;
+    background: var(--bar);
+  }
+  .highlight .bar {
+    background: var(--sodium-fill);
+  }
+  .ci {
+    position: absolute;
+    top: calc(50% - 2px);
+    height: 4px;
+    background: var(--bar);
+  }
+  .highlight .ci {
+    background: var(--sodium-fill);
+  }
+  .dot {
+    position: absolute;
+    top: 50%;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--muted);
+    transform: translate(-50%, -50%);
+  }
+  .highlight .dot {
+    background: var(--sodium-fill);
+    border-color: var(--ink);
+  }
+  .ref {
+    position: absolute;
+    top: -0.35rem;
+    bottom: -0.35rem;
+    width: 0;
+    border-left: 2px dashed var(--prussian);
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+  }
+  .ref-key {
+    width: 0;
+    height: 1rem;
+    border-left: 2px dashed var(--prussian);
+  }
+
+  .large figcaption {
+    max-width: 70ch;
+  }
+  .large {
+    --track-h: 1rem;
+    font-size: var(--step-0);
+  }
+  .large .rows {
+    gap: 1rem;
+  }
+  @media (min-width: 640px) {
+    .large .row {
+      grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) minmax(5rem, auto);
+      grid-template-areas: 'label track value';
+      align-items: center;
+    }
+    .large .value {
+      text-align: right;
+    }
+  }
+</style>

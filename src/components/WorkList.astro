@@ -1,0 +1,187 @@
+---
+import Figure from './Figure.astro';
+import { projects } from '../content/site';
+import { url } from '../lib/url';
+
+const featured = projects.filter((p) => p.figure);
+const more = projects.filter((p) => !p.figure);
+---
+
+<ol class="work" role="list">
+  {
+    featured.map((p) => (
+      <li class="project">
+        <article aria-labelledby={`p-${p.slug}`}>
+          <div class="text">
+            <h3 id={`p-${p.slug}`}>
+              {p.caseStudy ? <a href={url(`work/${p.slug}/`)}>{p.title}</a> : p.title}
+            </h3>
+            {p.status && <p class="status">{p.status}</p>}
+            <p class="summary">{p.summary}</p>
+            <p class="finding">{p.finding}</p>
+            <ul class="stack-list" aria-label="Stack">
+              {p.stack.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+            <ul class="link-row">
+              {p.caseStudy && (
+                <li>
+                  <a href={url(`work/${p.slug}/`)}>
+                    Read the case study<span class="visually-hidden">: {p.title}</span>
+                  </a>
+                </li>
+              )}
+              {p.links.map((l) => (
+                <li>
+                  <a href={l.href}>{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {p.figure && (
+            <div class="fig">
+              <Figure figure={p.figure} />
+            </div>
+          )}
+        </article>
+      </li>
+    ))
+  }
+</ol>
+
+<div class="more">
+  <h3 class="more-title">Other work</h3>
+  <ul role="list">
+    {
+      more.map((p) => (
+        <li>
+          <h4>
+            {p.title}
+            {p.status && <span class="tag">{p.status}</span>}
+          </h4>
+          <p>{p.summary}</p>
+          <p class="more-finding">{p.finding}</p>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .work {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .project + .project {
+    border-top: 1px solid var(--line);
+  }
+  .project {
+    padding-block: 2.25rem;
+  }
+  .project:first-child {
+    padding-top: 0;
+  }
+  article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+  @media (min-width: 1000px) {
+    article {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      gap: 3rem;
+    }
+  }
+  h3 {
+    font-size: var(--step-3);
+    font-stretch: 110%;
+    font-weight: 640;
+    letter-spacing: -0.01em;
+  }
+  h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  h3 a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .status {
+    margin-top: 0.5rem;
+    color: var(--sodium-text);
+    font-weight: 560;
+    font-size: var(--step--1);
+  }
+  .summary {
+    margin-top: 0.75rem;
+    max-width: 60ch;
+  }
+  .finding {
+    margin-top: 0.75rem;
+    max-width: 60ch;
+    padding-left: 0.9rem;
+    border-left: 3px solid var(--sodium-fill);
+    font-weight: 540;
+  }
+  .stack-list {
+    margin-top: 1rem;
+  }
+  .link-row {
+    margin-top: 0.75rem;
+  }
+  .fig {
+    align-self: start;
+    min-width: 0;
+    padding-top: 0.35rem;
+  }
+
+  .more {
+    margin-top: 1rem;
+    padding-top: 2.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .more-title {
+    font-size: var(--step-1);
+    font-weight: 620;
+    color: var(--muted);
+  }
+  .more ul {
+    display: grid;
+    gap: 1.75rem;
+    margin-top: 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 760px) {
+    .more ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.5rem;
+    }
+  }
+  .more h4 {
+    font-size: var(--step-1);
+    font-weight: 620;
+    font-stretch: 106%;
+  }
+  .tag {
+    display: inline-block;
+    margin-left: 0.6rem;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--sodium-text);
+    border-radius: 999px;
+    color: var(--sodium-text);
+    font-size: var(--step--1);
+    font-weight: 560;
+    vertical-align: 0.15em;
+  }
+  .more p {
+    margin-top: 0.5rem;
+    max-width: 58ch;
+  }
+  .more-finding {
+    color: var(--muted);
+  }
+</style>

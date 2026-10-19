@@ -1,0 +1,444 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WorkList from '../components/WorkList.astro';
+import portrait from '../assets/portrait.jpg';
+import { activities, experience, profile, research, skills } from '../content/site';
+import { url } from '../lib/url';
+---
+
+<Base>
+  <Hero />
+
+  <div class="wrap">
+    <section class="section" id="work" aria-labelledby="work-title">
+      <div class="section-head">
+        <h2 id="work-title">Selected work</h2>
+        <p>Each figure uses the numbers published in the project's own repo or report.</p>
+      </div>
+      <div class="section-body">
+        <WorkList />
+      </div>
+    </section>
+
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <div class="section-head">
+        <h2 id="experience-title">Experience</h2>
+      </div>
+      <div class="section-body">
+        <ol class="roles" role="list">
+          {
+            experience.map((r) => (
+              <li class="role">
+                <p class="when">
+                  <time>{r.start}</time> – <time>{r.end}</time>
+                </p>
+                <div>
+                  <h3>{r.title}</h3>
+                  <p class="org">
+                    {r.org}, {r.place}
+                  </p>
+                  <ul class="points">
+                    {r.points.map((pt) => (
+                      <li>{pt}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="research" aria-labelledby="research-title">
+      <div class="section-head">
+        <h2 id="research-title">Research</h2>
+      </div>
+      <div class="section-body">
+        {
+          research.map((r) => (
+            <article class="paper">
+              <p class="venue">{r.venue}</p>
+              <h3>{r.title}</h3>
+              <p class="org">{r.note}</p>
+              <p class="paper-summary">{r.summary}</p>
+              <p class="paper-link">
+                <a href={url(r.href)}>Read the case study<span class="visually-hidden">: {r.title}</span></a>
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="section-head">
+        <h2 id="about-title">About</h2>
+      </div>
+      <div class="section-body about">
+        <div class="prose">
+          {profile.about.map((p) => <p>{p}</p>)}
+          <dl class="edu">
+            <dt>Education</dt>
+            <dd>
+              <strong>{profile.education.school}</strong>
+              <br />
+              {profile.education.degree}, {profile.education.period}
+            </dd>
+          </dl>
+        </div>
+        <Picture
+          src={portrait}
+          formats={['avif', 'webp']}
+          widths={[240, 360, 480, 720]}
+          sizes="(min-width: 1000px) 15rem, (min-width: 640px) 12rem, 9rem"
+          alt={`Portrait of ${profile.name}`}
+          class="portrait"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </section>
+
+    <section class="section" id="activities" aria-labelledby="activities-title">
+      <div class="section-head">
+        <h2 id="activities-title">Beyond the lab</h2>
+      </div>
+      <div class="section-body">
+        {
+          activities.map((a) => (
+            <article class="activity">
+              <div>
+                <h3>{a.title}</h3>
+                <p class="org">
+                  {a.org}, {a.period}
+                </p>
+                <ul class="points">
+                  {a.points.map((pt) => (
+                    <li>{pt}</li>
+                  ))}
+                </ul>
+              </div>
+              <figure class="flight">
+                <svg viewBox="0 0 320 176" role="img" aria-labelledby="flight-title">
+                  <title id="flight-title">Rocket flight profile: Mach 1.5 top speed, 2.8 km apogee</title>
+                  <line x1="10" y1="150" x2="310" y2="150" class="ground" />
+                  <path d="M30 150 C 70 20, 150 18, 190 28 S 280 110, 296 150" class="arc" />
+                  <line x1="168" y1="24" x2="168" y2="150" class="apogee-line" />
+                  <circle cx="168" cy="24" r="5" class="apogee" />
+                  <text x="178" y="20" class="t-strong">2.8 km apogee</text>
+                  <text x="10" y="168" class="t-muted">Top speed Mach 1.5</text>
+                </svg>
+              </figure>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="section" id="skills" aria-labelledby="skills-title">
+      <div class="section-head">
+        <h2 id="skills-title">Skills</h2>
+      </div>
+      <div class="section-body">
+        <dl class="skills">
+          {
+            skills.map((s) => (
+              <div>
+                <dt>{s.group}</dt>
+                <dd>{s.items.join(', ')}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="section-head">
+        <h2 id="contact-title">Contact</h2>
+      </div>
+      <div class="section-body">
+        <p class="contact-lede">
+          Open to machine learning roles and research collaborations. Email is the fastest way to reach me.
+        </p>
+        <p class="email">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        </p>
+        <div class="contact-actions">
+          <button type="button" class="copy" data-copy={profile.email}>Copy email address</button>
+          <span class="copied" role="status" aria-live="polite"></span>
+        </div>
+        <ul class="link-row">
+          <li><a href={profile.links.github}>GitHub</a></li>
+          <li><a href={profile.links.linkedin}>LinkedIn</a></li>
+          {profile.resumePdf && (
+            <li>
+              <a href={url(profile.resumePdf)}>Resume (PDF)</a>
+            </li>
+          )}
+        </ul>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const status = document.querySelector<HTMLElement>('.copied');
+  button?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      if (status) status.textContent = 'Copied to clipboard';
+    } catch {
+      if (status) status.textContent = 'Copy failed. Select the address above instead.';
+    }
+    setTimeout(() => status && (status.textContent = ''), 2500);
+  });
+</script>
+
+<style>
+  h3 {
+    font-size: var(--step-1);
+    font-weight: 640;
+    font-stretch: 106%;
+  }
+  .org {
+    margin-top: 0.25rem;
+    color: var(--muted);
+  }
+  .points {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding-left: 1.1rem;
+    max-width: 66ch;
+  }
+  .points li::marker {
+    color: var(--prussian);
+  }
+
+  .roles {
+    display: grid;
+    gap: 2.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .role {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+  @media (min-width: 640px) {
+    .role {
+      grid-template-columns: 10.5rem minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  .when {
+    color: var(--muted);
+    font-size: var(--step--1);
+    padding-top: 0.2rem;
+    white-space: nowrap;
+  }
+
+  .paper {
+    max-width: 52rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--paper-raised);
+    border-left: 4px solid var(--prussian);
+  }
+  .paper .venue {
+    color: var(--sodium-text);
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+  .paper h3 {
+    margin-top: 0.5rem;
+    font-size: var(--step-3);
+    font-stretch: 110%;
+  }
+  .paper-link {
+    margin-top: 1rem;
+    font-weight: 560;
+  }
+  .paper-summary {
+    margin-top: 1rem;
+    max-width: 62ch;
+  }
+
+  .about {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 640px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) 12rem;
+      align-items: start;
+    }
+  }
+  @media (min-width: 1000px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      gap: 3.5rem;
+    }
+  }
+  .about :global(.portrait) {
+    width: 9rem;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 2px;
+    filter: saturate(0.92);
+  }
+  @media (min-width: 640px) {
+    .about :global(.portrait) {
+      width: 100%;
+    }
+  }
+  :global(:root[data-theme='dark']) .about :global(.portrait) {
+    filter: saturate(0.92) brightness(0.86);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .about :global(.portrait) {
+      filter: saturate(0.92) brightness(0.86);
+    }
+  }
+  .edu {
+    margin-top: 1.75rem !important;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .edu dt {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .edu dd {
+    margin: 0.35rem 0 0;
+  }
+
+  .activity {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 1000px) {
+    .activity {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+      gap: 3rem;
+    }
+  }
+  .flight svg {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    overflow: visible;
+  }
+  .flight .ground {
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+  .flight .arc {
+    fill: none;
+    stroke: var(--prussian);
+    stroke-width: 2;
+    stroke-dasharray: 5 5;
+  }
+  .flight .apogee-line {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .flight .apogee {
+    fill: var(--sodium-fill);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .flight text {
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  .flight .t-strong {
+    fill: var(--ink);
+    font-weight: 600;
+  }
+  .flight .t-muted {
+    fill: var(--muted);
+  }
+
+  .skills {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 52rem;
+  }
+  .skills > div {
+    display: grid;
+    gap: 0.25rem;
+  }
+  @media (min-width: 640px) {
+    .skills > div {
+      grid-template-columns: 12rem minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+  .skills dt {
+    font-weight: 600;
+  }
+  .skills dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .contact-lede {
+    max-width: 48ch;
+  }
+  .email {
+    margin-top: 1.25rem;
+    font-size: clamp(1.45rem, 0.6rem + 4.2vw, 3.6rem);
+    font-weight: 640;
+    font-stretch: 118%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .email a {
+    color: var(--ink);
+    text-decoration-color: var(--sodium-fill);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.14em;
+  }
+  .email a:hover {
+    text-decoration-thickness: 0.14em;
+  }
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .copy {
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 560;
+    cursor: pointer;
+  }
+  .copy:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .copied {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .contact .link-row {
+    margin-top: 1.5rem;
+  }
+</style>

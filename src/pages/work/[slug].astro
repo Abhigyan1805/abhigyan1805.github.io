@@ -1,0 +1,208 @@
+---
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import { profile, projects, type Project } from '../../content/site';
+import { url } from '../../lib/url';
+
+export function getStaticPaths() {
+  const studies = projects.filter((p) => p.caseStudy);
+  return studies.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: studies[(i + 1) % studies.length] },
+  }));
+}
+
+interface Props {
+  project: Project;
+  next: Project;
+}
+
+const { project, next } = Astro.props;
+const study = project.caseStudy!;
+const sections = [
+  { id: 'context', title: 'The problem', items: study.context, list: false },
+  { id: 'approach', title: 'What I built', items: study.approach, list: true },
+  { id: 'results', title: 'Results', items: study.results, list: true },
+  { id: 'caveats', title: 'Limits', items: study.caveats, list: true },
+];
+---
+
+<Base
+  title={`${project.title}: ${profile.name}`}
+  description={`${project.summary} ${project.finding}`}
+  path={`work/${project.slug}/`}
+>
+  <article class="wrap study">
+    <header class="study-head">
+      <p class="crumb"><a href={`${url()}#work`}>Selected work</a></p>
+      <h1>{project.title}</h1>
+      <p class="meta">
+        {project.year}
+        {project.status && <span>{project.status}</span>}
+      </p>
+      <p class="summary">{project.summary}</p>
+      <p class="finding">{project.finding}</p>
+    </header>
+
+    {
+      project.figure && (
+        <div class="figure-band">
+          <Figure figure={project.figure} size="large" />
+        </div>
+      )
+    }
+
+    <div class="body">
+      {
+        sections.map((s) => (
+          <section class="section" aria-labelledby={s.id}>
+            <div class="section-head">
+              <h2 id={s.id}>{s.title}</h2>
+            </div>
+            <div class="section-body prose">
+              {s.list ? (
+                <ul class="points">
+                  {s.items.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              ) : (
+                s.items.map((t) => <p>{t}</p>)
+              )}
+            </div>
+          </section>
+        ))
+      }
+      <section class="section" aria-labelledby="stack">
+        <div class="section-head">
+          <h2 id="stack">Stack and links</h2>
+        </div>
+        <div class="section-body">
+          <p>{project.stack.join(', ')}</p>
+          {
+            project.links.length > 0 ? (
+              <ul class="link-row links">
+                {project.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="muted">The code for this project is not public.</p>
+            )
+          }
+        </div>
+      </section>
+    </div>
+
+    <nav class="next" aria-label="More work">
+      <a href={url(`work/${next.slug}/`)}>
+        <span class="next-label">Next case study</span>
+        <span class="next-title">{next.title}</span>
+      </a>
+      <a href={`${url()}#work`} class="back">All selected work</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .study-head {
+    padding-block: clamp(3rem, 8vw, 6rem) 2.5rem;
+    max-width: 62rem;
+  }
+  .crumb {
+    font-size: var(--step--1);
+    font-weight: 560;
+  }
+  h1 {
+    margin-top: 1rem;
+    font-size: clamp(2.2rem, 1.2rem + 4.2vw, 4.6rem);
+    font-weight: 680;
+    font-stretch: 120%;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .meta span {
+    color: var(--sodium-text);
+    font-weight: 560;
+  }
+  .summary {
+    margin-top: 1.5rem;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    max-width: 52ch;
+  }
+  .finding {
+    margin-top: 1rem;
+    max-width: 60ch;
+    padding-left: 0.9rem;
+    border-left: 3px solid var(--sodium-fill);
+    font-weight: 540;
+  }
+  .figure-band {
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    background: var(--paper-raised);
+  }
+  .body > .section {
+    padding-block: clamp(2rem, 4vw, 3.25rem);
+  }
+  .points {
+    display: grid;
+    gap: 0.75rem;
+    padding-left: 1.1rem;
+  }
+  .points li::marker {
+    color: var(--prussian);
+  }
+  .links {
+    margin-top: 1rem;
+  }
+  .muted {
+    margin-top: 0.75rem;
+    color: var(--muted);
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem;
+    padding-block: 3rem 4rem;
+    border-top: 1px solid var(--line);
+  }
+  .next a {
+    text-decoration: none;
+  }
+  .next a:hover .next-title,
+  .back:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .next-label {
+    display: block;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .next-title {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--ink);
+    font-size: var(--step-3);
+    font-weight: 640;
+    font-stretch: 112%;
+    line-height: 1.15;
+  }
+  .back {
+    font-weight: 560;
+  }
+</style>

@@ -1,0 +1,175 @@
+---
+import { profile } from '../content/site';
+import { url } from '../lib/url';
+
+const home = url();
+const nav = [
+  { label: 'Work', href: `${home}#work` },
+  { label: 'Experience', href: `${home}#experience` },
+  { label: 'Research', href: `${home}#research` },
+  { label: 'About', href: `${home}#about` },
+  { label: 'Contact', href: `${home}#contact` },
+];
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={home}>{profile.name}</a>
+    <nav aria-label="Sections">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" aria-label="Use dark theme" data-theme-toggle>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+        <path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const current = () =>
+    (root.dataset.theme as 'light' | 'dark' | undefined) ?? (media.matches ? 'dark' : 'light');
+
+  const label = () => {
+    if (!button) return;
+    const next = current() === 'dark' ? 'light' : 'dark';
+    button.setAttribute('aria-label', `Use ${next} theme`);
+  };
+
+  button?.addEventListener('click', () => {
+    const next = current() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    label();
+    window.dispatchEvent(new CustomEvent('themechange'));
+  });
+  media.addEventListener('change', () => {
+    label();
+    window.dispatchEvent(new CustomEvent('themechange'));
+  });
+  label();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: var(--header-h);
+  }
+  .brand {
+    color: var(--ink);
+    font-weight: 660;
+    font-stretch: 118%;
+    font-size: 0.95rem;
+    text-decoration: none;
+    white-space: nowrap;
+    padding-block: 0.5rem;
+  }
+  nav {
+    margin-left: auto;
+    min-width: 0;
+  }
+  nav ul {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    display: block;
+    padding: 0.5rem 0.6rem;
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 520;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  nav a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    background: var(--paper-raised);
+  }
+  :global(:root[data-theme='dark']) .theme-toggle svg {
+    transform: rotate(180deg);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .theme-toggle svg {
+      transform: rotate(180deg);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-toggle svg {
+      transition: transform 0.4s cubic-bezier(0.3, 0.7, 0.2, 1);
+    }
+  }
+
+  /* Narrow screens: the brand shortens and the nav scrolls on its own row. */
+  @media (max-width: 759px) {
+    .bar {
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
+    .brand {
+      order: 0;
+    }
+    .theme-toggle {
+      order: 1;
+      margin-left: auto;
+    }
+    nav {
+      order: 2;
+      flex-basis: 100%;
+      margin-left: calc(var(--gutter) * -1);
+      margin-right: calc(var(--gutter) * -1);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav ul {
+      gap: 0;
+      padding-inline: calc(var(--gutter) - 0.45rem);
+      padding-bottom: 0.25rem;
+    }
+    nav a {
+      padding-inline: 0.45rem;
+    }
+  }
+</style>

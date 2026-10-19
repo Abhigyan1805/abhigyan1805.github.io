@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  Source for public/og.jpg (1200×630). Open this file in a browser at a
+  1200×630 viewport and take a screenshot; see README "Regenerating assets".
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OG image</title>
+    <style>
+      @font-face {
+        font-family: 'Mona Sans';
+        src: url('../src/assets/fonts/mona-sans-var.woff2') format('woff2');
+        font-weight: 200 900;
+        font-stretch: 75% 125%;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #0a1729;
+        color: #dce4ee;
+        font-family: 'Mona Sans', sans-serif;
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 1200px;
+        height: 630px;
+        -webkit-mask-image: linear-gradient(100deg, transparent 28%, #000 72%);
+        mask-image: linear-gradient(100deg, transparent 28%, #000 72%);
+      }
+      .text {
+        position: absolute;
+        left: 72px;
+        bottom: 72px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 104px;
+        font-weight: 700;
+        font-stretch: 125%;
+        line-height: 0.92;
+        letter-spacing: -0.035em;
+      }
+      h1 span {
+        display: block;
+      }
+      h1 span + span {
+        font-weight: 380;
+        color: #7fb0ea;
+      }
+      p {
+        margin: 36px 0 0;
+        font-size: 30px;
+        font-weight: 560;
+        font-stretch: 108%;
+      }
+      small {
+        display: block;
+        margin-top: 12px;
+        color: #9baac0;
+        font-size: 22px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas width="240" height="126"></canvas>
+    <div class="text">
+      <h1><span>Abhigyan</span><span>Kumar Singh</span></h1>
+      <p>Machine learning engineer</p>
+      <small>Birla Institute of Technology &amp; Science, Pilani</small>
+    </div>
+    <script>
+      const c = document.querySelector('canvas');
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height, CELL = 5, lambda = 58;
+      const k = (2 * Math.PI * CELL) / lambda;
+      const paper = [10, 23, 41], pos = [245, 192, 74], neg = [127, 176, 234];
+      const src = Array.from({ length: 6 }, (_, i) => ({ x: W * 0.88, y: H * 0.5 + (i - 2.5) * (lambda / 2 / CELL), ph: i * 1.1 }));
+      const img = ctx.createImageData(W, H);
+      for (let y = 0; y < H; y++)
+        for (let x = 0; x < W; x++) {
+          let v = 0;
+          for (const s of src) {
+            const r = Math.hypot(x - s.x, y - s.y);
+            v += Math.cos(k * r + s.ph) / Math.sqrt(1 + r * 0.05);
+          }
+          v = Math.max(-1, Math.min(1, v / (6 * 0.32)));
+          const col = v > 0 ? pos : neg, a = Math.abs(v) * 0.7, o = (y * W + x) * 4;
+          for (let j = 0; j < 3; j++) img.data[o + j] = paper[j] + (col[j] - paper[j]) * a;
+          img.data[o + 3] = 255;
+        }
+      ctx.putImageData(img, 0, 0);
+    </script>
+  </body>
+</html>
