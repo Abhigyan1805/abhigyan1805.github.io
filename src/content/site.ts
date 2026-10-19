@@ -155,7 +155,7 @@ export const projects: Project[] = [
       caveats: [
         'The 130× figure is a projection (1,000 times the mean measured single-sweep time of 4 designs), not a measured end-to-end run, and the spread across designs is wide (24× to 253×).',
         'The CST reference is a FEM unit-cell model with Floquet ports, while the solver models the pattern as a zero-thickness sheet.',
-        'The 33× to 50× CPU comparison is not at the same precision: the GPU solver runs in single precision (complex64) with a tolerance of 5×10⁻⁴, since tighter values stall in single precision, while the CPU baseline runs the same solver in double precision (complex128) with a tolerance of 10⁻⁸.',
+        'The 33× to 50× CPU comparison is not at the same precision: the GPU solver runs in single precision (complex64) with a tolerance of 5×10^-4, since tighter values stall in single precision, while the CPU baseline runs the same solver in double precision (complex128) with a tolerance of 10^-8.',
         'This is ongoing internship work at CSIR-NAL, so the code is not public.',
       ],
     },
