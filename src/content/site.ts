@@ -85,7 +85,7 @@ export const profile = {
     'Final-year dual-degree student at Birla Institute of Technology & Science, Pilani, reading Mechanical Engineering and Physics. I work on speech recognition, LLM agents, retrieval and forecasting, and on GPU solvers for electromagnetics at CSIR-National Aerospace Laboratories.',
   about: [
     'My training is in mechanical engineering and physics, and it shapes how I do machine learning: start from the physics or the data, build the measurement before the model, and report the number that generalises rather than the flattering one.',
-    'Right now that means a GPU-accelerated Method of Moments solver for metasurfaces at CSIR-NAL, with a first-author paper in preparation for NCC 2027. Before that I evaluated and trained LLMs through RLHF at Outlier.ai and forecast train delays at the Centre for Railway Information Systems.',
+    'Right now that means a GPU-accelerated Method of Moments solver for metasurfaces at CSIR-NAL, with a first-author paper submitted to NCC 2027 and under review. Before that I evaluated and trained LLMs through RLHF at Outlier.ai and forecast train delays at the Centre for Railway Information Systems.',
     'Outside the lab I am a senior member of the Astro Club at BITS Pilani, where I have helped run stargazing nights and worked on an amateur rocket.',
   ],
   education: {
@@ -126,7 +126,7 @@ export const projects: Project[] = [
       'Validated against CST on 4 designs. Projected at about 130× faster than CST for 1,000 sweeps, extrapolated from measured single sweeps.',
     stack: ['PyTorch', 'FFT', 'GMRES', 'Computational electromagnetics'],
     links: [],
-    status: 'CSIR-NAL, first-author paper in preparation for NCC 2027',
+    status: 'CSIR-NAL, first-author paper submitted to NCC 2027, under review',
     figure: {
       kind: 'bars',
       caption: 'Projected time for 1,000 sweeps, extrapolated from 4 measured designs',
@@ -150,7 +150,7 @@ export const projects: Project[] = [
         'Validated against CST on 4 designs: the principal resonances agree within 4.8% in frequency and 6.2 dB in depth.',
         'Measured on 4 designs, one 201-point sweep each (2 to 18 GHz): the solver on 4×A100 was 24× to 253× faster than CST, and 33× to 50× faster than the same FFT-based method on one CPU.',
         'Scaled to 1,000 sweeps using the mean times of those 4 designs, that projects to about 36.6 hours in CST and 11.8 hours on one CPU, against about 17 minutes on 4×A100, about 130× faster than CST.',
-        'A first-author paper is in preparation for NCC 2027.',
+        'A first-author paper has been submitted to NCC 2027 and is under review.',
       ],
       caveats: [
         'The 130× figure is a projection (1,000 times the mean measured single-sweep time of 4 designs), not a measured end-to-end run, and the spread across designs is wide (24× to 253×).',
@@ -379,7 +379,7 @@ export const experience: Role[] = [
     points: [
       'Built a GPU-accelerated Method of Moments solver in PyTorch (FFT-based matrix-free operator, batched GMRES), validated against CST on 4 designs, with 1,000 sweeps projected at about 130× faster than CST (extrapolated from measured single sweeps).',
       'Improved the response-prediction pipeline with vision transformers, and explored diffusion and GAN generative models for computational engineering.',
-      'First-author paper in preparation for NCC 2027.',
+      'First-author paper submitted to NCC 2027, under review.',
     ],
   },
   {
@@ -410,7 +410,7 @@ export const experience: Role[] = [
 export const research = [
   {
     title: 'GPU-accelerated Method of Moments for metasurface design',
-    venue: 'First-author paper in preparation for NCC 2027',
+    venue: 'First-author paper submitted to NCC 2027, under review',
     note: 'CSIR-National Aerospace Laboratories, CEM Division',
     summary:
       'A Method of Moments solver in PyTorch with an FFT-based matrix-free operator and batched GMRES, validated against CST on 4 designs, with 1,000 sweeps projected at about 130× faster than CST (extrapolated from measured single sweeps).',
